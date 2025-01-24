@@ -83,6 +83,3 @@ trainer = Trainer(
 trainer.train()
 trainer.save_model("D:/Projects_DataAnalyst/Sentiment_Analysis/model/bert")
 tokenizer.save_pretrained("D:/Projects_DataAnalyst/Sentiment_Analysis/model/bert")
-
-
-
