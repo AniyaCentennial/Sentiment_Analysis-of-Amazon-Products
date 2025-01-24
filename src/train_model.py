@@ -2,8 +2,10 @@ import pandas as pd
 from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainingArguments
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 import torch
+import numpy as np
+import evaluate  # Use the new evaluate library for metrics
 
 # Load dataset
 file_path = "D:/Projects_DataAnalyst/Sentiment_Analysis/data/processed_data.csv"
@@ -54,6 +56,14 @@ test_dataset = SentimentDataset(X_test, y_test, tokenizer)
 # Model
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=3)
 
+# Metric function
+accuracy_metric = evaluate.load("accuracy")
+
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+    predictions = np.argmax(predictions, axis=1)
+    return accuracy_metric.compute(predictions=predictions, references=labels)
+
 # Training arguments
 training_args = TrainingArguments(
     output_dir="D:/Projects_DataAnalyst/Sentiment_Analysis/model/bert",
@@ -77,6 +87,7 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=test_dataset,
     tokenizer=tokenizer,
+    compute_metrics=compute_metrics,
 )
 
 # Train and save model

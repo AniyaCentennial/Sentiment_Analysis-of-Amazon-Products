@@ -161,3 +161,6 @@ cython_debug/
 logs/events.out.tfevents.1737665453.ANIYA.7236.0
 *.0
 /logs
+
+.bert
+/model
